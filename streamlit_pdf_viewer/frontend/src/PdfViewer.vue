@@ -1,13 +1,13 @@
 <template>
   <div id="pdfContainer" :style="pdfContainerStyle">
     <div v-if="args.rendering === 'unwrap'">
-      <!-- PDF 工具栏 -->
+      <!-- PDF Toolbar -->
       <div class="pdf-toolbar" :style="toolbarStyle">
         <button 
           @click="goToPreviousPage" 
           :disabled="currentPage <= 1"
           class="nav-button"
-          title="上一页"
+          title="Previous Page"
         >
           ‹
         </button>
@@ -29,18 +29,18 @@
           @click="goToNextPage" 
           :disabled="currentPage >= totalPages"
           class="nav-button"
-          title="下一页"
+          title="Next Page"
         >
           ›
         </button>
         
-        <!-- 缩放控制 -->
+        <!-- Zoom Controls -->
         <div class="zoom-controls">
           <button 
             @click="zoomOut" 
             :disabled="currentZoom <= minZoom"
             class="zoom-button"
-            title="缩小"
+            title="Zoom Out"
           >
             -
           </button>
@@ -51,7 +51,7 @@
             @click="zoomIn" 
             :disabled="currentZoom >= maxZoom"
             class="zoom-button"
-            title="放大"
+            title="Zoom In"
           >
             +
           </button>
@@ -59,9 +59,9 @@
           <button 
             @click="resetZoom"
             class="zoom-reset-button"
-            title="重置缩放"
+            title="Reset Zoom"
           >
-            重置
+            Reset
           </button>
         </div>
       </div>
@@ -107,19 +107,19 @@ export default {
     const loadedPages = ref([]);
     const currentFrameHeight = ref(props.args.height || 0);
     
-    // 新添加的响应式变量
+    // Newly added reactive variables
     const currentPage = ref(1);
     const totalPages = ref(0);
     const pageInputValue = ref(1);
     
-    // 缩放相关的响应式变量
+    // Zoom-related reactive variables
     const currentZoom = ref(1.0);
     const minZoom = ref(0.5);
     const maxZoom = ref(3.0);
     const zoomStep = ref(0.25);
     const baseScale = ref(1.0);
 
-    // 初始化容器宽度
+    // Initialize container width
     const initializeMaxWidth = () => {
       const result = parseWidthValue(props.args.width);
       if (result.type === "percent") {
@@ -127,8 +127,8 @@ export default {
       } else {
         maxWidth.value = result.value;
       }
-      // 确保有一个合理的最小宽度，并且不超过窗口宽度
-      maxWidth.value = Math.max(maxWidth.value, 300); // 最小宽度300px
+      // Ensure a reasonable minimum width and don't exceed window width
+      maxWidth.value = Math.max(maxWidth.value, 300); // Minimum width 300px
       maxWidth.value = Math.min(maxWidth.value, window.innerWidth);
     };
 
@@ -137,7 +137,7 @@ export default {
     const renderText = props.args.render_text === true;
 
     const parseWidthValue = (widthValue, fallbackValue = window.innerWidth) => {
-      // 如果没有指定宽度，默认使用100%
+      // If no width is specified, default to 100%
       if (!widthValue) {
         return { type: "percent", value: 1.0 };
       }
@@ -152,7 +152,7 @@ export default {
       if (!isNaN(numeric) && numeric > 0) {
         return { type: "pixel", value: numeric };
       }
-      return { type: "percent", value: 1.0 }; // 默认100%
+      return { type: "percent", value: 1.0 }; // Default 100%
     };
 
     const pdfContainerStyle = computed(() => {
@@ -168,7 +168,7 @@ export default {
 
     const pdfViewerStyle = { position: 'relative' };
 
-    // 工具栏样式
+    // Toolbar style
     const toolbarStyle = computed(() => ({
       display: 'flex',
       alignItems: 'center',
@@ -320,7 +320,7 @@ export default {
       pageHeights.value = [];
       loadedPages.value = [];
       
-      // 设置总页数
+      // Set total pages
       totalPages.value = pdf.numPages;
 
       const resolutionBoost = props.args.resolution_boost || 1;
@@ -332,10 +332,10 @@ export default {
         const rotation = page.rotate;
         const unscaledViewport = page.getViewport({ scale: 1.0, rotation });
 
-        // 计算缩放比例：让PDF宽度占满容器宽度
+        // Calculate scale ratio: make PDF width fill container width
         const scale = (maxWidth.value / unscaledViewport.width) * currentZoom.value;
         
-        // 存储基础缩放比例（第一次计算时）
+        // Store base scale ratio (on first calculation)
         if (pageNumber === 1 && baseScale.value === 1.0) {
           baseScale.value = maxWidth.value / unscaledViewport.width;
         }
@@ -399,9 +399,9 @@ export default {
       }
     };
 
-    // 页面导航方法
+    // Page navigation methods
     const updateCurrentPage = () => {
-      // 通过查看当前可见的页面来确定当前页码
+      // Determine current page number by checking currently visible pages
       const pdfContainer = document.getElementById("pdfContainer");
       if (!pdfContainer) return;
 
@@ -446,7 +446,7 @@ export default {
           currentPage.value = targetPage;
         }
       } else {
-        // 如果输入无效，恢复到当前页码
+        // If input is invalid, restore to current page number
         pageInputValue.value = currentPage.value;
       }
     };
@@ -465,7 +465,7 @@ export default {
       }
     };
 
-    // 缩放相关方法
+    // Zoom related methods
     const zoomIn = async () => {
       const newZoom = Math.min(currentZoom.value + zoomStep.value, maxZoom.value);
       if (newZoom !== currentZoom.value) {
@@ -489,7 +489,7 @@ export default {
       }
     };
 
-    // 刷新PDF页面（应用新的缩放）
+    // Refresh PDF pages (apply new zoom)
     const refreshPdfPages = async () => {
       try {
         const binaryDataUrl = `data:application/pdf;base64,${props.args.binary}`;
@@ -546,8 +546,8 @@ export default {
         newMaxWidth = result.value;
       }
 
-      // 确保有一个合理的最小宽度，并且不超过窗口宽度
-      newMaxWidth = Math.max(newMaxWidth, 300); // 最小宽度300px
+      // Ensure a reasonable minimum width and don't exceed window width
+      newMaxWidth = Math.max(newMaxWidth, 300); // Minimum width 300px
       newMaxWidth = Math.min(newMaxWidth, window.innerWidth);
 
       if (newMaxWidth !== maxWidth.value) {
@@ -559,7 +559,7 @@ export default {
       try {
         console.log('handleResize');
         if (props.args.rendering === "unwrap") {
-          setFrameWidth(); // 先设置宽度
+          setFrameWidth(); // Set width first
           const binaryDataUrl = `data:application/pdf;base64,${props.args.binary}`;
           await loadPdfs(binaryDataUrl);
           setFrameHeight();
@@ -576,7 +576,7 @@ export default {
     const debouncedUpdateCurrentPage = debounce(updateCurrentPage, 100);
 
     onMounted(() => {
-      initializeMaxWidth(); // 先初始化容器宽度
+      initializeMaxWidth(); // Initialize container width first
       debouncedHandleResize();
       window.addEventListener("resize", debouncedHandleResize);
       
@@ -607,7 +607,7 @@ export default {
       goToPreviousPage,
       goToNextPage,
       goToPage,
-      // 缩放相关
+      // Zoom related
       currentZoom,
       minZoom,
       maxZoom,
@@ -620,7 +620,7 @@ export default {
 </script>
 
 <style>
-/* PDF容器和页面的基础样式 */
+/* Basic styles for PDF container and pages */
 #pdfContainer {
   box-sizing: border-box;
 }
@@ -719,7 +719,7 @@ export default {
   font-weight: 500;
 }
 
-/* 缩放控件样式 */
+/* Zoom control styles */
 .zoom-controls {
   display: flex;
   align-items: center;

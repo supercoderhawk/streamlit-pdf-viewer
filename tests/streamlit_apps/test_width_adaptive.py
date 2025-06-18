@@ -4,45 +4,49 @@ import base64
 
 st.set_page_config(page_title="PDF Width Adaptive Test", layout="wide")
 
-st.title("PDF宽度自适应测试")
+st.title("PDF Width Adaptive Test")
 
-# 读取测试PDF文件
+# Read test PDF file
 try:
     with open("resources/test.pdf", "rb") as f:
         binary_data = f.read()
         binary_data_base64 = base64.b64encode(binary_data).decode('utf-8')
         
-    st.write("## 测试1: 不指定宽度 (应该占满容器)")
+    st.write("## Test 1: No width specified (should fill container)")
     pdf_viewer.pdf_viewer(
         input=binary_data,
         rendering='unwrap',
+        annotations=[],
         key="test1"
     )
     
-    st.write("## 测试2: 指定50%宽度")
+    st.write("## Test 2: 50% width specified")
     pdf_viewer.pdf_viewer(
         input=binary_data,
         rendering='unwrap',
         width="50%",
+        annotations=[],
         key="test2"
     )
     
-    st.write("## 测试3: 指定800px宽度")
+    st.write("## Test 3: 800px width specified")
     pdf_viewer.pdf_viewer(
         input=binary_data,
         rendering='unwrap',
         width=800,
+        annotations=[],
         key="test3"
     )
     
-    st.write("## 测试4: 100%宽度")
+    st.write("## Test 4: 100% width")
     pdf_viewer.pdf_viewer(
         input=binary_data,
         rendering='unwrap',
         width="100%",
+        annotations=[],
         key="test4"
     )
 
 except FileNotFoundError:
-    st.error("找不到测试PDF文件 'resources/test.pdf'")
-    st.write("请确保测试PDF文件存在")
+    st.error("Test PDF file 'resources/test.pdf' not found")
+    st.write("Please ensure the test PDF file exists")
