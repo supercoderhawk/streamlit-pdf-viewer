@@ -8,3 +8,7 @@ streamlit_pdf_viewer/frontend/package-lock.json
 streamlit_pdf_viewer.egg-info
 streamlit_pdf_viewer/__pycache__/
 tests/__pycache__
+Pipfile
+node_modules
+package-lock.json
+package.json

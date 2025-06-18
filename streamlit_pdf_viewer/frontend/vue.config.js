@@ -1,4 +1,6 @@
 const {VueLoaderPlugin} = require('vue-loader');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 module.exports = {
   publicPath: './',
   configureWebpack: {
@@ -18,7 +20,13 @@ module.exports = {
       ]
     },
     plugins: [
-      new VueLoaderPlugin()
+      new VueLoaderPlugin(),
+      new CopyWebpackPlugin({patterns:[
+        {
+          from: 'node_modules/pdfjs-dist/cmaps/',
+          to: 'pdfjs-dist/cmaps/'
+        }
+      ]})
     ],
   }
 }
