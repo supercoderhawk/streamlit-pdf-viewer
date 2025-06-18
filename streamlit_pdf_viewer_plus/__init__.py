@@ -177,13 +177,13 @@ if not _RELEASE:
     #     """
     # )
 
-    with open("resources/test.pdf", 'rb') as fo:
+    with open("../resources/test.pdf", 'rb') as fo:
         binary = fo.read()
 
-    with open("resources/test.pdf", 'rb') as fo:
+    with open("../resources/test.pdf", 'rb') as fo:
         binary2 = fo.read()
 
-    with open("resources/annotations.sample.json", 'rb') as fo:
+    with open("../resources/annotations.sample.json", 'rb') as fo:
         annotations = json.loads(fo.read())
 
     tab1, tab2 = st.tabs(["tab1", "tab2"])

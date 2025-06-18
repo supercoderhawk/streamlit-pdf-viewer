@@ -1,5 +1,6 @@
 const {VueLoaderPlugin} = require('vue-loader');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   publicPath: './',
@@ -27,6 +28,7 @@ module.exports = {
           to: 'pdfjs-dist/cmaps/'
         }
       ]})
+      // new BundleAnalyzerPlugin()
     ],
   }
 }

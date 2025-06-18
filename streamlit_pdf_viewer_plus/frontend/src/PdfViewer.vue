@@ -17,6 +17,7 @@
             v-model="pageInputValue"
             @keyup.enter="goToPage"
             @blur="goToPage"
+            @input="validatePageInput"
             type="number"
             :min="1"
             :max="totalPages"
@@ -83,13 +84,13 @@
 </template>
 
 <script>
-import { onMounted, onUpdated, computed, ref, onUnmounted } from "vue";
+import { onMounted, computed, ref, onUnmounted } from "vue";
 import "pdfjs-dist/web/pdf_viewer.css";
 import "pdfjs-dist/build/pdf.worker.mjs";
-import { getDocument } from "pdfjs-dist/build/pdf";
+import { getDocument, GlobalWorkerOptions } from "pdfjs-dist/build/pdf";
 import { Streamlit } from "streamlit-component-lib";
-import * as pdfjsLib from "pdfjs-dist";
-import { debounce } from 'lodash';
+import { TextLayer } from "pdfjs-dist";
+import debounce from 'lodash/debounce';
 
 const CMAP_URL = "pdfjs-dist/cmaps/";
 const CMAP_PACKED = true;
@@ -179,8 +180,11 @@ export default {
       borderBottom: '1px solid #ddd',
       position: 'sticky',
       top: '0',
-      zIndex: 100,
-      fontSize: '14px'
+      zIndex: 1000, // Increased z-index to ensure it stays on top
+      fontSize: '14px',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Add shadow for better visibility
+      width: '100%',
+      boxSizing: 'border-box'
     }));
 
     const calculatePdfsHeight = (page) => {
@@ -285,7 +289,7 @@ export default {
         textLayerDiv.style.height = `${viewport.height}px`;
         textLayerDiv.style.width = `${viewport.width}px`;
 
-        const textLayer = new pdfjsLib.TextLayer({
+        const textLayer = new TextLayer({
           textContentSource: textContent,
           container: textLayerDiv,
           viewport: viewport,
@@ -322,6 +326,14 @@ export default {
       
       // Set total pages
       totalPages.value = pdf.numPages;
+      
+      // Ensure current page and page input are within valid range
+      if (currentPage.value < 1) {
+        currentPage.value = 1;
+      } else if (currentPage.value > totalPages.value) {
+        currentPage.value = totalPages.value;
+      }
+      pageInputValue.value = currentPage.value;
 
       const resolutionBoost = props.args.resolution_boost || 1;
 
@@ -378,7 +390,7 @@ export default {
     };
 
     const loadPdfs = async (url) => {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.mjs';
+      GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.mjs';
       try {
         const loadingTask = getDocument({
           url: url,
@@ -408,9 +420,8 @@ export default {
       const containerRect = pdfContainer.getBoundingClientRect();
       const containerTop = containerRect.top;
       const containerBottom = containerRect.bottom;
-      const containerCenter = containerTop + containerRect.height / 2;
 
-      let visiblePage = 1;
+      let visiblePage = currentPage.value; // Start with current page instead of 1
       let maxVisibleArea = 0;
 
       for (let i = 1; i <= totalPages.value; i++) {
@@ -431,19 +442,35 @@ export default {
         }
       }
       
-      if (currentPage.value !== visiblePage) {
-        currentPage.value = visiblePage;
-        pageInputValue.value = visiblePage;
+      // Only update if we found a page with visible area or if current page is invalid
+      if (maxVisibleArea > 0 || currentPage.value < 1 || currentPage.value > totalPages.value) {
+        if (currentPage.value !== visiblePage) {
+          currentPage.value = visiblePage;
+          pageInputValue.value = visiblePage;
+        }
+      }
+    };
+
+    // Validate and fix page input value
+    const validatePageInput = () => {
+      if (pageInputValue.value < 1) {
+        pageInputValue.value = 1;
+      } else if (pageInputValue.value > totalPages.value) {
+        pageInputValue.value = totalPages.value;
       }
     };
 
     const goToPage = () => {
+      validatePageInput(); // Ensure input is valid before processing
       const targetPage = parseInt(pageInputValue.value);
       if (targetPage >= 1 && targetPage <= totalPages.value) {
         const pageElement = document.getElementById(`canvas_page_${targetPage}`);
         if (pageElement) {
           pageElement.scrollIntoView({ behavior: "smooth" });
           currentPage.value = targetPage;
+        } else {
+          // If page element not found, restore to current page number
+          pageInputValue.value = currentPage.value;
         }
       } else {
         // If input is invalid, restore to current page number
@@ -452,14 +479,14 @@ export default {
     };
 
     const goToPreviousPage = () => {
-      if (currentPage.value > 1) {
+      if (currentPage.value > 1 && totalPages.value > 0) {
         pageInputValue.value = currentPage.value - 1;
         goToPage();
       }
     };
 
     const goToNextPage = () => {
-      if (currentPage.value < totalPages.value) {
+      if (currentPage.value < totalPages.value && totalPages.value > 0) {
         pageInputValue.value = currentPage.value + 1;
         goToPage();
       }
@@ -574,6 +601,19 @@ export default {
     
     // Debounced scroll handler to update current page
     const debouncedUpdateCurrentPage = debounce(updateCurrentPage, 100);
+    
+    // Fix toolbar visibility issues in Streamlit containers
+    const ensureToolbarVisibility = () => {
+      const toolbar = document.querySelector('.pdf-toolbar');
+      if (toolbar) {
+        // Force re-render of sticky positioning
+        toolbar.style.position = 'sticky';
+        toolbar.style.top = '0';
+        toolbar.style.zIndex = '1000';
+      }
+    };
+    
+    const debouncedEnsureToolbarVisibility = debounce(ensureToolbarVisibility, 100);
 
     onMounted(() => {
       initializeMaxWidth(); // Initialize container width first
@@ -584,16 +624,21 @@ export default {
       const pdfContainer = document.getElementById("pdfContainer");
       if (pdfContainer) {
         pdfContainer.addEventListener("scroll", debouncedUpdateCurrentPage);
+        pdfContainer.addEventListener("scroll", debouncedEnsureToolbarVisibility);
       }
+      
+      // Ensure toolbar is visible after initial load
+      setTimeout(ensureToolbarVisibility, 100);
     });
 
     onUnmounted(() => {
       window.removeEventListener("resize", debouncedHandleResize);
       
-      // Remove scroll listener
+      // Remove scroll listeners
       const pdfContainer = document.getElementById("pdfContainer");
       if (pdfContainer) {
         pdfContainer.removeEventListener("scroll", debouncedUpdateCurrentPage);
+        pdfContainer.removeEventListener("scroll", debouncedEnsureToolbarVisibility);
       }
     });
 
@@ -607,6 +652,7 @@ export default {
       goToPreviousPage,
       goToNextPage,
       goToPage,
+      validatePageInput,
       // Zoom related
       currentZoom,
       minZoom,
@@ -623,6 +669,20 @@ export default {
 /* Basic styles for PDF container and pages */
 #pdfContainer {
   box-sizing: border-box;
+  /* Ensure proper stacking context for sticky positioning */
+  position: relative;
+  overflow: auto;
+  /* Fix for Streamlit container issues */
+  height: 100%;
+}
+
+/* Specific fixes for Streamlit containers */
+.element-container #pdfContainer {
+  position: relative !important;
+}
+
+.stContainer #pdfContainer {
+  overflow: auto !important;
 }
 
 #pdfViewer {
@@ -659,9 +719,18 @@ export default {
   border-bottom: 1px solid #ddd;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000; /* Increased z-index */
   font-size: 14px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  /* Force the toolbar to stay on top in all contexts */
+  position: -webkit-sticky; /* Safari support */
+  
+  /* Additional fixes for Streamlit containers */
+  width: 100%;
+  box-sizing: border-box;
+  /* Ensure it works in various container contexts */
+  transform: translateZ(0); /* Force hardware acceleration */
+  will-change: transform; /* Optimize for changes */
 }
 
 .nav-button {
