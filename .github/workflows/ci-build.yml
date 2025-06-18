@@ -26,7 +26,7 @@ jobs:
           node-version: ${{matrix.node-version}}
       - name: build frontend
         run: |
-          cd streamlit_pdf_viewer/frontend/
+          cd streamlit_pdf_viewer_plus/frontend/
           npm install
           npm run build
       - name: Cleanup more disk space
@@ -50,6 +50,6 @@ jobs:
         run: |          
           pip install playwright==1.41.1 pytest-playwright==0.6.2 pytest==8.0.1 pytest-github-actions-annotate-failures pytest-cov==4.1.0
           playwright install chromium firefox
-          pytest --cov=streamlit_pdf_viewer --cov-report xml
+          pytest --cov=streamlit_pdf_viewer_plus --cov-report xml
       - name: Coveralls
         uses: coverallsapp/github-action@v2

@@ -36,14 +36,14 @@ def go_to_app(page: Page, streamlit_app: StreamlitRunner):
 def test_should_render_template_check_container_size(page: Page):
     expect(page.get_by_text("Test PDF Viewer using legacy iframe with specified width and height")).to_be_visible()
 
-    iframe_component = page.locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(0)
+    iframe_component = page.locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(0)
     expect(iframe_component).to_be_visible()
 
     iframe_box = iframe_component.bounding_box()
     assert iframe_box['width'] > 0
     assert iframe_box['height'] > 0
 
-    iframe_frame = page.frame_locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]')
+    iframe_frame = page.frame_locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]')
     pdf_container = iframe_frame.locator('div[id="pdfContainer"]')
     expect(pdf_container).to_be_visible()
 

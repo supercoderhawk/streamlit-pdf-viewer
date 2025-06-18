@@ -1,12 +1,12 @@
 .idea
-streamlit_pdf_viewer/frontend/node_modules
-streamlit_pdf_viewer/frontend/.idea
+streamlit_pdf_viewer_plus/frontend/node_modules
+streamlit_pdf_viewer_plus/frontend/.idea
 venv
 dist
 /frontend/dist
-streamlit_pdf_viewer/frontend/package-lock.json
-streamlit_pdf_viewer.egg-info
-streamlit_pdf_viewer/__pycache__/
+streamlit_pdf_viewer_plus/frontend/package-lock.json
+streamlit_pdf_viewer_plus.egg-info
+streamlit_pdf_viewer_plus/__pycache__/
 tests/__pycache__
 Pipfile
 node_modules

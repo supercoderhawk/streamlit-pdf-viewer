@@ -35,10 +35,10 @@ def go_to_app(page: Page, streamlit_app: StreamlitRunner):
 
 def test_resolution_boost(page: Page):
     expect(page.get_by_text("Test PDF Viewer with different resolution boosts")).to_be_visible()
-    page.wait_for_selector('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]')
-    page.locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(2).wait_for(state="visible")
-    page.locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(6).wait_for(state="hidden")
-    iframe_components = page.locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').all()
+    page.wait_for_selector('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]')
+    page.locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(2).wait_for(state="visible")
+    page.locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(6).wait_for(state="hidden")
+    iframe_components = page.locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').all()
     assert len(iframe_components) == 6
 
     expect(iframe_components[0]).to_be_visible()
@@ -55,15 +55,15 @@ def test_resolution_boost(page: Page):
     expect(tab2).to_be_visible()
 
     # Tab 1
-    iframe_frame_0 = page.frame_locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(0)
+    iframe_frame_0 = page.frame_locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(0)
     expect(iframe_frame_0.locator('div[id="pdfContainer"]')).to_be_visible()
     expect(iframe_frame_0.locator('div[id="pdfViewer"]')).to_be_visible()
 
-    iframe_frame_1 = page.frame_locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(1)
+    iframe_frame_1 = page.frame_locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(1)
     expect(iframe_frame_1.locator('div[id="pdfContainer"]')).to_be_visible()
     expect(iframe_frame_1.locator('div[id="pdfViewer"]')).to_be_visible()
 
-    iframe_frame_2 = page.frame_locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(2)
+    iframe_frame_2 = page.frame_locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(2)
     expect(iframe_frame_2.locator('div[id="pdfContainer"]')).to_be_visible()
     expect(iframe_frame_2.locator('div[id="pdfViewer"]')).to_be_visible()
 
@@ -77,7 +77,7 @@ def test_resolution_boost(page: Page):
     # click on the second tab and verify that the PDF is visible
     tab2.click()
 
-    iframe_components = page.locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').all()
+    iframe_components = page.locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').all()
     assert len(iframe_components) == 6
 
     expect(iframe_components[0]).not_to_be_visible()
@@ -87,15 +87,15 @@ def test_resolution_boost(page: Page):
     expect(iframe_components[4]).to_be_visible()
     expect(iframe_components[5]).to_be_visible()
 
-    iframe_frame_3 = page.frame_locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(3)
+    iframe_frame_3 = page.frame_locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(3)
     expect(iframe_frame_3.locator('div[id="pdfContainer"]')).to_be_visible()
     expect(iframe_frame_3.locator('div[id="pdfViewer"]')).to_be_visible()
 
-    iframe_frame_4 = page.frame_locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(4)
+    iframe_frame_4 = page.frame_locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(4)
     expect(iframe_frame_4.locator('div[id="pdfContainer"]')).to_be_visible()
     expect(iframe_frame_4.locator('div[id="pdfViewer"]')).to_be_visible()
 
-    iframe_frame_5 = page.frame_locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(5)
+    iframe_frame_5 = page.frame_locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(5)
     expect(iframe_frame_5.locator('div[id="pdfContainer"]')).to_be_visible()
     expect(iframe_frame_5.locator('div[id="pdfViewer"]')).to_be_visible()
 

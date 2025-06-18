@@ -9,14 +9,14 @@ current_version_line = [line for line in bump_version.split('\n') if 'current_ve
 version = current_version_line.split('=')[1].strip().strip('"')
 
 setuptools.setup(
-    name="streamlit-pdf-viewer",
+    name="streamlit-pdf-viewer-plus",
     version=version,
-    author="Luca Foppiano, Tomoya Mato",
-    author_email="lucanoro@duck.com, tomoya.matou@gmail.com",
+    author="supercoderhawk",
+    author_email="supercoderhawk@gmail.com",
     description="Streamlit component for PDF visualisation and manipulation",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/lfoppiano/streamlit-pdf-viewer",
+    url="https://github.com/supercoderhawk/streamlit-pdf-viewer-plus",
     packages=setuptools.find_packages(),
     include_package_data=True,
     python_requires=">=3.7",

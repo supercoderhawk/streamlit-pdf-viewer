@@ -1,5 +1,5 @@
 import streamlit as st
-import streamlit_pdf_viewer as pdf_viewer
+import streamlit_pdf_viewer_plus as pdf_viewer
 import base64
 
 st.set_page_config(page_title="PDF Width Adaptive Test", layout="wide")

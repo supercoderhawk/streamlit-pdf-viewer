@@ -3,7 +3,7 @@ import os
 import streamlit as st
 from streamlit import markdown
 
-from streamlit_pdf_viewer import pdf_viewer
+from streamlit_pdf_viewer_plus import pdf_viewer
 from tests import ROOT_DIRECTORY
 
 st.subheader("Test PDF Viewer with different resolution boosts")

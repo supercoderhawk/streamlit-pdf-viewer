@@ -58,7 +58,7 @@ In your streamlit application, you can use it as:
 
 ```python
 import streamlit as st
-from streamlit_pdf_viewer import pdf_viewer
+from streamlit_pdf_viewer_plus_plus import pdf_viewer
 
 pdf_viewer("str, path or bytes")
 ```
@@ -116,7 +116,7 @@ The example shown in our screenshot can be found [here](resources/annotations.js
 ### Custom callback for clicking on annotations
 
 ```python
-from streamlit_pdf_viewer import pdf_viewer
+from streamlit_pdf_viewer_plus_plus import pdf_viewer
 
 annotations = [
     {
@@ -161,11 +161,11 @@ pdf_viewer(
 
 ### Configure environment for development
 
-First, make sure that _RELEASE = False in `streamlit_pdf_viewer/__init__.py`. To run the component in development mode,
+First, make sure that _RELEASE = False in `streamlit_pdf_viewer_plus/__init__.py`. To run the component in development mode,
 use the following commands:
 
 ```shell
-streamlit run streamlit_pdf_viewer/__init__.py
+streamlit run streamlit_pdf_viewer_plus/__init__.py
 
 cd frontend
 npm run serve
@@ -184,7 +184,7 @@ correct directory before running these commands.
     npm run build 
     ```
 
-1. Make sure that _RELEASE = True in `streamlit_pdf_viewer/__init__.py`.
+1. Make sure that _RELEASE = True in `streamlit_pdf_viewer_plus/__init__.py`.
 
 2. move to the streamlit_application and run
 

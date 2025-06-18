@@ -36,10 +36,10 @@ def go_to_app(page: Page, streamlit_app: StreamlitRunner):
 def test_should_fail_rendering(page: Page):
     expect(page.get_by_text("Test PDF Viewer using legacy embed with specified height")).to_be_visible()
 
-    iframe_component = page.locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(0)
+    iframe_component = page.locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(0)
     expect(iframe_component).not_to_be_visible()
 
-    iframe_frame = page.frame_locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]')
+    iframe_frame = page.frame_locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]')
     pdf_container = iframe_frame.locator('div[id="pdfContainer"]')
     expect(pdf_container).not_to_be_visible()
 

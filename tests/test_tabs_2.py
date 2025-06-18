@@ -36,7 +36,7 @@ def go_to_app(page: Page, streamlit_app: StreamlitRunner):
 def test_should_render_template_check_container_size(page: Page):
     expect(page.get_by_text("Test PDF Viewer with the PDF in a tab")).to_be_visible()
 
-    iframe_component = page.locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(0)
+    iframe_component = page.locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(0)
     expect(iframe_component).to_be_visible()
 
     iframe_box = iframe_component.bounding_box()
@@ -44,7 +44,7 @@ def test_should_render_template_check_container_size(page: Page):
     assert iframe_box['height'] > 0
 
     # Tab 1
-    iframe_frame_0 = page.frame_locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(0)
+    iframe_frame_0 = page.frame_locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(0)
     pdf_container_0 = iframe_frame_0.locator('div[id="pdfContainer"]')
     expect(pdf_container_0).to_be_visible()
 
@@ -59,7 +59,7 @@ def test_should_render_template_check_container_size(page: Page):
     expect(annotations_locator).to_be_hidden()
 
     # Tab 2
-    iframe_frame_1 = page.frame_locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(1)
+    iframe_frame_1 = page.frame_locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(1)
     pdf_container_1 = iframe_frame_1.locator('div[id="pdfContainer"]')
     expect(pdf_container_1).not_to_be_visible()
 
@@ -78,7 +78,7 @@ def test_should_render_template_check_container_size(page: Page):
     # click on the second tab and verify that the PDF is visible
     tab1.click()
 
-    iframe_frame_1 = page.frame_locator('iframe[title="streamlit_pdf_viewer.streamlit_pdf_viewer"]').nth(1)
+    iframe_frame_1 = page.frame_locator('iframe[title="streamlit_pdf_viewer_plus.streamlit_pdf_viewer_plus"]').nth(1)
     pdf_container_1 = iframe_frame_1.locator('div[id="pdfContainer"]')
     expect(pdf_container_1).to_be_visible()
 

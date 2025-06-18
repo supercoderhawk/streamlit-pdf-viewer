@@ -25,7 +25,7 @@ jobs:
           node-version: "18"
       - name: build frontend
         run: |
-          cd streamlit_pdf_viewer/frontend/
+          cd streamlit_pdf_viewer_plus/frontend/
           npm install
           npm run build
       - name: Cleanup more disk space
