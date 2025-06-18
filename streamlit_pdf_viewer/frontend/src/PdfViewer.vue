@@ -119,26 +119,44 @@ export default {
     const zoomStep = ref(0.25);
     const baseScale = ref(1.0);
 
+    // 初始化容器宽度
+    const initializeMaxWidth = () => {
+      const result = parseWidthValue(props.args.width);
+      if (result.type === "percent") {
+        maxWidth.value = Math.floor(result.value * window.innerWidth);
+      } else {
+        maxWidth.value = result.value;
+      }
+      // 确保有一个合理的最小宽度，并且不超过窗口宽度
+      maxWidth.value = Math.max(maxWidth.value, 300); // 最小宽度300px
+      maxWidth.value = Math.min(maxWidth.value, window.innerWidth);
+    };
+
     const isRenderingAllPages = props.args.pages_to_render.length === 0;
 
     const renderText = props.args.render_text === true;
 
     const parseWidthValue = (widthValue, fallbackValue = window.innerWidth) => {
+      // 如果没有指定宽度，默认使用100%
+      if (!widthValue) {
+        return { type: "percent", value: 1.0 };
+      }
+      
       if (typeof widthValue === "string" && widthValue.endsWith("%")) {
-        const num = parseFloat(widthValue)
+        const num = parseFloat(widthValue);
         if (!isNaN(num)) {
-          return { type: "percent", value: num / 100 }
+          return { type: "percent", value: num / 100 };
         }
       }
-      const numeric = Number(widthValue)
+      const numeric = Number(widthValue);
       if (!isNaN(numeric) && numeric > 0) {
-        return { type: "pixel", value: numeric }
+        return { type: "pixel", value: numeric };
       }
-      return { type: "pixel", value: fallbackValue }
-    }
+      return { type: "percent", value: 1.0 }; // 默认100%
+    };
 
     const pdfContainerStyle = computed(() => {
-      const result = parseWidthValue(props.args.width, window.innerWidth);
+      const result = parseWidthValue(props.args.width);
       const widthCSS = result.type === "percent" ? `${result.value * 100}%` : `${result.value}px`;
       return {
         width: widthCSS,
@@ -520,7 +538,7 @@ export default {
     };
 
     const setFrameWidth = () => {
-      const result = parseWidthValue(props.args.width, window.innerWidth);
+      const result = parseWidthValue(props.args.width);
       let newMaxWidth;
       if (result.type === "percent") {
         newMaxWidth = Math.floor(result.value * window.innerWidth);
@@ -558,6 +576,7 @@ export default {
     const debouncedUpdateCurrentPage = debounce(updateCurrentPage, 100);
 
     onMounted(() => {
+      initializeMaxWidth(); // 先初始化容器宽度
       debouncedHandleResize();
       window.addEventListener("resize", debouncedHandleResize);
       
@@ -601,6 +620,35 @@ export default {
 </script>
 
 <style>
+/* PDF容器和页面的基础样式 */
+#pdfContainer {
+  box-sizing: border-box;
+}
+
+#pdfViewer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.page canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.canvasWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .pdf-toolbar {
   display: flex;
   justify-content: center;
