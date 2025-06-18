@@ -46,6 +46,7 @@ jobs:
         run: | 
           pip install build 
           python -m build
+          pip install -e .
       - name: Test with pytest
         run: |          
           pip install playwright==1.41.1 pytest-playwright==0.6.2 pytest==8.0.1 pytest-github-actions-annotate-failures pytest-cov==4.1.0
