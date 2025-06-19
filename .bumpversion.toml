@@ -1,5 +1,5 @@
 [tool.bumpversion]
-current_version = "0.0.2-dev0"
+current_version = "0.0.2"
 commit = "true"
 tag = "true"
 tag_name = "v{new_version}"
@@ -15,9 +15,10 @@ parse = """(?x)
     )?                                # pre-release section is optional
 """
 
+# Change the order: put the simple format first
 serialize = [
-     "{major}.{minor}.{patch}",
-    "{major}.{minor}.{patch}-{pre_l}{pre_n}"
+    "{major}.{minor}.{patch}",
+    "{major}.{minor}.{patch}-{pre_l}{pre_n}",
 ]
 
 [tool.bumpversion.parts.pre_l]
