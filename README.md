@@ -51,14 +51,14 @@ Here some caveats to be aware of:
 ## Getting started
 
 ```sh
-pip install streamlit-pdf-viewer
+pip install streamlit-pdf-viewer-plus
 ```
 
 In your streamlit application, you can use it as:
 
 ```python
 import streamlit as st
-from streamlit_pdf_viewer_plus_plus import pdf_viewer
+from streamlit_pdf_viewer_plus import pdf_viewer
 
 pdf_viewer("str, path or bytes")
 ```
@@ -116,7 +116,7 @@ The example shown in our screenshot can be found [here](resources/annotations.js
 ### Custom callback for clicking on annotations
 
 ```python
-from streamlit_pdf_viewer_plus_plus import pdf_viewer
+from streamlit_pdf_viewer_plus import pdf_viewer
 
 annotations = [
     {
